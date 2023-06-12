@@ -1,15 +1,14 @@
-FROM python:3
+FROM node:16
 
 # Set working directory
 WORKDIR /app
 
-# Copy code
+# Copy code and package
 COPY index.py .
+COPY package.json .
+COPY package-lock.json .
 
-
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN npm install
 
 # Define entry point
-CMD ["python", "index.py"]
+CMD ["node", "index.js"]
