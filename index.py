@@ -2,13 +2,23 @@ import docker
 import time
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--no-sandbox")  # Add the --no-sandbox flag
+# Specify the Selenium Grid Hub URL
+hub_url = "http://selenium-hub:4444/wd/hub"
 
-driver = webdriver.Chrome(options=chrome_options)
+# Create Chrome options
+chrome_options = Options()
 
+# Define the desired capabilities for Chrome
+capabilities = DesiredCapabilities.CHROME.copy()
+capabilities["goog:chromeOptions"] = chrome_options.to_capabilities()
+
+# Create a remote WebDriver instance
+driver = webdriver.Remote(command_executor=hub_url, options=chrome_options)
+
+print('Passei Driver')
 # Open a URL
 driver.get('https://www.taylorswifttheerastour.com.br/')
 
