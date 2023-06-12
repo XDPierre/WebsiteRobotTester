@@ -10,28 +10,6 @@ async function stopContainer(containerId) {
   await container.stop();
 }
 
-// Example condition: if a specific container name is running
-async function checkConditionAndStopContainer() {
-  const containerName = 'your-container-name';
-
-  // Get a list of running containers
-  const containers = await docker.listContainers({ all: true });
-
-  // Check if the desired container is running
-  const targetContainer = containers.find(container => container.Names.includes(`/${containerName}`));
-  if (targetContainer) {
-    console.log(`Stopping container ${containerName}...`);
-    await stopContainer(targetContainer.Id);
-    console.log(`Container ${containerName} stopped.`);
-  } else {
-    console.log(`Container ${containerName} is not running.`);
-  }
-}
-
-// Call the function to check the condition and stop the container
-checkConditionAndStopContainer()
-  .catch(error => console.error(error));
-
 const chrome = require("selenium-webdriver/chrome");
 const { Builder, By, Key, until } = require("selenium-webdriver");
 
@@ -59,20 +37,13 @@ const { Builder, By, Key, until } = require("selenium-webdriver");
     );
 
     console.log(await firstResult.getAttribute("textContent"));
+    console.log(parseInt(firstResult.getAttribute("textContent")));
     // Shut down the container if the condition is met
-    // if (field_value > 100000) {
-    //   // Connect to the Docker daemon
-    //   client = docker.from_env()
-          
-    //   // Get the container by name or ID
-    //   container = client.containers.get('taylorshow')
-
-    //   // Stop and remove the container
-    //   container.stop()
-    //   container.remove()
-    // }
+    if (parseInt(firstResult.getAttribute("textContent")) > 100000) {
+      stopContainer('taylorshow1');
+    }
 
     } finally {
-      driver.quit();
+      // driver.quit();
     }
   })();
