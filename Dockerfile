@@ -1,14 +1,14 @@
-FROM node:16
+# Use a base image with Node.js and Chrome
+FROM node:latest
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy code and package
-COPY index.py .
-COPY package.json .
-COPY package-lock.json .
+# Copy the JavaScript code to the container
+COPY . /app
 
+# Install dependencies
 RUN npm install
 
-# Define entry point
+# Set the entry point command
 CMD ["node", "index.js"]

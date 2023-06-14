@@ -3,6 +3,11 @@ Makes a request in a lot of diferent browser do check the stability of the site.
 
 The docker part is not fully implemented wet
 
+## New
+docker build -t taylorshow .
+docker-compose up
+
+## OLD Running and testing method
 # Run for dependencies of project
 npm install
 
