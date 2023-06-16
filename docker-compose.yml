@@ -1,44 +1,27 @@
-@@ -1,21 +1,41 @@
 version: "3"
-
-networks:
-  grid_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.0.0/24
-
-
 services:
+  selenium-node-chrome:
+    image: selenium/node-chrome
+    shm_size: 2g
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443 
+    depends_on:
+      - selenium-hub
+    ports:
+      - "7900:5900"  # Expose VNC port for the browser window
+
+  taylorshow:
+    image: taylorshow:latest
+    depends_on:
+      - selenium-hub
+      - selenium-node-chrome
+
   selenium-hub:
     image: selenium/hub
+    container_name: selenium-hub
     ports:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
-    networks:
-      - grid_network
-    
-
-  selenium-node-chrome:
-    image: selenium/node-chrome
-    shm_size: 2g
-    ports:
-      - "7900:5900"  # Expose VNC port for the browser window
-    networks:
-      - grid_network
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4444
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=5555 
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443 
-
-
-  taylorshow:
-    image: taylorshow:latest
-    networks:
-      - grid_network
-    depends_on:
-      - selenium-hub
-      - selenium-node-chrome
