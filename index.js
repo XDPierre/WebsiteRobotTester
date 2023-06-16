@@ -9,7 +9,7 @@
 //   const container = docker.getContainer(containerId);
 //   await container.stop();
 // }
-
+require('dotenv').config();
 const axios = require('axios');
 const fetch = import('node-fetch').default;
 
@@ -57,7 +57,7 @@ async function exec(cmd) {
   
   try {
     // Navigate to Url
-    await driver.get('https://www.taylorswifttheerastour.com.br/');
+    await driver.get(process.env.TESTED_SITE_URL);
 
     // Click
     let button = driver.findElement(By.css('body > div > section.section-3.wf-section > div > div.w-layout-grid.grid-8 > a:nth-child(3) > div > div.text-block-20'));
