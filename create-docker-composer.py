@@ -1,7 +1,7 @@
 import os
 
 def generate_docker_compose(num_copies):
-    compose_file = open("docker-compose-copier.yml", "w+")
+    compose_file = open("docker-compose.yml", "w+")
 
     # Write the initial part of the Docker Compose file
     compose_file.write("version: '3'\n")
@@ -34,6 +34,8 @@ def generate_docker_compose(num_copies):
         
         compose_file.write(f"  {taylorshow_name}:\n")
         compose_file.write("    image: taylorshow:latest\n")
+        compose_file.write("    environment:\n")
+        compose_file.write(f"      - HOSTNAME={i}\n")
         compose_file.write("    depends_on:\n")
         compose_file.write("      - selenium-hub\n")
         compose_file.write(f"      - {service_name}\n\n")
@@ -41,4 +43,4 @@ def generate_docker_compose(num_copies):
     compose_file.close()
 
 # Usage: Call the function with the desired number of copies
-generate_docker_compose(10)
+generate_docker_compose(2)

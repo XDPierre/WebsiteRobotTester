@@ -1,27 +1,50 @@
-version: "3"
+version: '3'
 services:
-  selenium-node-chrome:
+  selenium-hub:
+    image: selenium/hub
+    container_name: selenium-hub
+    ports:
+      - '4442:4442'
+      - '4443:4443'
+      - '4444:4444'
+
+  selenium-node-chrome-1:
     image: selenium/node-chrome
     shm_size: 2g
     environment:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443 
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
     depends_on:
       - selenium-hub
     ports:
-      - "7900:5900"  # Expose VNC port for the browser window
+      - '7901:5900'  # Expose VNC port for the browser window
 
-  taylorshow:
+  taylorshow-1:
     image: taylorshow:latest
+    environment:
+      - HOSTNAME=1
     depends_on:
       - selenium-hub
-      - selenium-node-chrome
+      - selenium-node-chrome-1
 
-  selenium-hub:
-    image: selenium/hub
-    container_name: selenium-hub
+  selenium-node-chrome-2:
+    image: selenium/node-chrome
+    shm_size: 2g
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
     ports:
-      - "4442:4442"
-      - "4443:4443"
-      - "4444:4444"
+      - '7902:5900'  # Expose VNC port for the browser window
+
+  taylorshow-2:
+    image: taylorshow:latest
+    environment:
+      - HOSTNAME=2
+    depends_on:
+      - selenium-hub
+      - selenium-node-chrome-2
+
