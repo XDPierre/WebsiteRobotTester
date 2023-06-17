@@ -1,4 +1,6 @@
-// TODO Add the part that remover the container
+require('dotenv').config();
+const axios = require('axios');
+const fetch = import('node-fetch').default;
 // const Docker = require('dockerode');
 
 // // Create a new Docker client
@@ -9,9 +11,6 @@
 //   const container = docker.getContainer(containerId);
 //   await container.stop();
 // }
-require('dotenv').config();
-const axios = require('axios');
-const fetch = import('node-fetch').default;
 
 async function waitForGrid() {
   const gridUrl = 'http://selenium-hub:4444/wd/hub/status';
@@ -25,7 +24,7 @@ async function waitForGrid() {
 
       if (isGridReady === true) {
         console.error('Selenium Grid is up - executing tests');
-        exec(cmd);
+        teste(cmd);
         break;
       } else {
         console.log('Waiting for the Grid');
@@ -44,8 +43,9 @@ function sleep(ms) {
 
 const chrome = require("selenium-webdriver/chrome");
 const { Builder, By, Key, until } = require("selenium-webdriver");
+const { log } = require('console');
 
-async function exec(cmd) {
+async function teste(cmd) {
   // Implement your logic to execute the tests here
   console.log('Executing tests:', cmd);
 
@@ -59,6 +59,8 @@ async function exec(cmd) {
     // Navigate to Url
     await driver.get(process.env.TESTED_SITE_URL);
 
+    const containerNameID = process.env.HOSTNAME;
+
     // Click
     let button = driver.findElement(By.css('body > div > section.section-3.wf-section > div > div.w-layout-grid.grid-8 > a:nth-child(3) > div > div.text-block-20'));
    
@@ -66,6 +68,7 @@ async function exec(cmd) {
 
     do {
       button.click();
+      sleep(2000);
       // Get the active tabs
       let windowHandles = await driver.getAllWindowHandles();
       tabs = Array.from(windowHandles);
@@ -75,9 +78,9 @@ async function exec(cmd) {
     await driver.switchTo().window(tabs[1].toString());
 
     let firstResult;
-
     do {
       try {
+        sleep(2000);
         firstResult = await driver.wait(
           until.elementLocated(By.css("body > #MainPart_lbUsersInLineAheadOfYou")),
           1000
@@ -92,8 +95,10 @@ async function exec(cmd) {
     console.log(parseInt(firstResult.getAttribute("textContent")));
     // Shut down the container if the condition is met
     if (parseInt(firstResult.getAttribute("textContent")) > 100000) {
-      // stopContainer('taylorshow1');
       console.log('---------------NADA AQUI--------------');
+      driver.quit();
+      // stopContainer('websiterobottester-selenium-node-chrome-'+containerNameID+'-1');
+      // stopContainer('websiterobottester-taylorshow-'+containerNameID+'-1');
     }
   
   } finally {
