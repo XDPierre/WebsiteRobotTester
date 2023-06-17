@@ -1,6 +1,8 @@
 # WebsiteRobotTester
 Makes a request in a lot of diferent browser do check the stability of the site.
 
+Tips:. Don`t forget to create the .env file based on .env-exemple
+
 ## Running using docker compose
 ---
 `The browser can be viewed in the containers using RealVNC, better to see your code running in real time`
