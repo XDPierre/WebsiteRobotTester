@@ -6,6 +6,8 @@ Download here: https://www.realvnc.com/pt/connect/download/viewer/
 
 ## Running using docker compose
 docker build -t taylorshow .
+python create-docker-composer.py <Number of containers>
+Exemple: python create-docker-composer.py 10
 docker-compose up
 
 ## Running using docker compose swarm

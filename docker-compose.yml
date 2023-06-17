@@ -15,6 +15,7 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_VNC_NO_PASSWORD=1
     depends_on:
       - selenium-hub
     ports:
@@ -23,7 +24,9 @@ services:
   taylorshow-1:
     image: taylorshow:latest
     environment:
-      - HOSTNAME=1
+     - HOSTNAME=1
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - selenium-hub
       - selenium-node-chrome-1
@@ -35,6 +38,7 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_VNC_NO_PASSWORD=1
     depends_on:
       - selenium-hub
     ports:
@@ -43,8 +47,33 @@ services:
   taylorshow-2:
     image: taylorshow:latest
     environment:
-      - HOSTNAME=2
+     - HOSTNAME=2
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - selenium-hub
       - selenium-node-chrome-2
+
+  selenium-node-chrome-3:
+    image: selenium/node-chrome
+    shm_size: 2g
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_VNC_NO_PASSWORD=1
+    depends_on:
+      - selenium-hub
+    ports:
+      - '7903:5900'  # Expose VNC port for the browser window
+
+  taylorshow-3:
+    image: taylorshow:latest
+    environment:
+     - HOSTNAME=3
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - selenium-hub
+      - selenium-node-chrome-3
 

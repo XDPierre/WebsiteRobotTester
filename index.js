@@ -1,16 +1,16 @@
 require('dotenv').config();
 const axios = require('axios');
 const fetch = import('node-fetch').default;
-// const Docker = require('dockerode');
+const Docker = require('dockerode');
 
-// // Create a new Docker client
-// const docker = new Docker();
+// Create a new Docker client
+const docker = new Docker();
 
-// // Function to shut down a Docker container by its container ID
-// async function stopContainer(containerId) {
-//   const container = docker.getContainer(containerId);
-//   await container.stop();
-// }
+// Function to shut down a Docker container by its container ID
+async function stopContainer(containerId) {
+  const container = docker.getContainer(containerId);
+  await container.stop();
+}
 
 async function waitForGrid() {
   const gridUrl = 'http://selenium-hub:4444/wd/hub/status';
@@ -65,7 +65,6 @@ async function teste(cmd) {
     let button = driver.findElement(By.css('body > div > section.section-3.wf-section > div > div.w-layout-grid.grid-8 > a:nth-child(3) > div > div.text-block-20'));
    
     let tabs = [];
-
     do {
       button.click();
       sleep(2000);
@@ -91,15 +90,16 @@ async function teste(cmd) {
       }
     } while (!firstResult);
     
-    console.log('Posicao Fila:');
+    console.log('Usuarios na sua frente na fila:');
     console.log(parseInt(firstResult.getAttribute("textContent")));
     // Shut down the container if the condition is met
     if (parseInt(firstResult.getAttribute("textContent")) > 100000) {
       console.log('---------------NADA AQUI--------------');
+      // This closes the connection with the browser and stops the browser container. And when this code is done running the container will stop as well
       driver.quit();
-      // stopContainer('websiterobottester-selenium-node-chrome-'+containerNameID+'-1');
-      // stopContainer('websiterobottester-taylorshow-'+containerNameID+'-1');
+      stopContainer('websiterobottester-selenium-node-chrome-'+containerNameID+'-1'); 
     }
+    console.log('Finalizou, fechando container');
   
   } finally {
     // driver.quit();
